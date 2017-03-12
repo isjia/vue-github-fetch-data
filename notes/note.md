@@ -310,3 +310,56 @@ fetchGithubData(name) {
   <p>Number of repos: {{ githubData[currentUsername].public_repos }}
 </div>
 ```
+
+## 优化
+
+**引入 GithubUserData 组件**，包含 `data` 属性。
+
+`src/GithubUserData/script.js`
+
+```js
+export default {
+  name: 'GithubUserData',
+  props: ['data'],
+  data() {
+    return {}
+  }
+}
+```
+
+`src/GithubUserData/template.html`
+
+```html
+<div v-if="data">
+  <h4>{{ data.name }}</h4>
+  <p>{{ data.company }}</p>
+  <p>Number of repos: {{ data.public_repos }}
+</div>
+```
+
+在 `GithubOutput` 中引用组件：
+
+`src/GithubOutput/script.js`
+
+```js
+import bus from '../bus'
+import Vue from 'vue'
+import GithubUserData from '../GithubUserData/index.vue'
+
+export default {
+  name: 'GithubOutput',
+  components: {
+    'github-user-data': GithubUserData,
+  },
+  ...
+}
+```
+
+`src/GithubOutput/template.html`
+
+```html
+<p v-else>
+  Below are the results for {{ currentUsername }}:
+  <github-user-data :data="githubData[currentUsername]"></github-user-data>
+</p>
+```
